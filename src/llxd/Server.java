@@ -28,6 +28,9 @@ public class Server {
 	
 	public Server(int _id, int _size, int _capacity)
 	{
+		this.row = -1;
+		this.slot = -1;
+		this.poolId = -1;
 		this.id = _id;
 		this.size= _size;
 		this.capacity = _capacity;

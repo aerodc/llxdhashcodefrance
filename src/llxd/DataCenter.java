@@ -50,4 +50,9 @@ public class DataCenter {
 			System.out.println();
 		}
 	}
+	
+	public int[][] getDC()
+	{
+		return this.dc;
+	}
 }
