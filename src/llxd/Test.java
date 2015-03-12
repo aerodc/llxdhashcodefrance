@@ -11,18 +11,46 @@ public class Test {
 	public static void main(String[] args) {
 		TestSort();
 	}
-	
-	public static void TestSort()
-	{
+
+	public static void TestSort() {
 		DataCenter dc = new DataCenter(16, 100);
 		ReadData(dc);
 		ServerDistributer sd = new ServerDistributer();
 		sd.work(dc.getServerList(), dc.dc);
-		dc.printDc();
-		FullRandom fr = new FullRandom(dc);
-		fr.RunRandom();
+		// dc.printDc();
+		// FullRandom fr = new FullRandom(dc);
+		// fr.RunRandom();
+
+		PoolDistributer1 pd1 = new PoolDistributer1();
+		pd1.work(dc);
+		System.out.println("Run here");
+
+		for (int i = 0; i < dc.getServerList().size(); i++) {
+
+//			Random r = new Random();
+
+			int low = 0;
+
+			int high = 45;
+
+//			int pullId = r.nextInt(high - low) + low;
+
+			Server s = dc.getServerList().get(i);
+
+//			s.SetPoolId(pullId);
+
+			if (s.row == -1 || s.slot == -1 || s.GetPoolId() == -1) {
+
+				System.out.println("x");
+
+			} else {
+				System.out.println(s.row + " " + s.slot + " " + s.GetPoolId());
+
+			}
+
+		}
 	}
-	
+
 	public static void ReadData(DataCenter dc) {
 		BufferedReader br = null;
 
@@ -40,7 +68,7 @@ public class Test {
 			M = 625;
 
 			int i = 1;
-			ArrayList<Server> list =  new ArrayList<Server>();
+			ArrayList<Server> list = new ArrayList<Server>();
 			while ((line = br.readLine()) != null) {
 				String strs[] = line.split(" ");
 				int x, y;
@@ -58,7 +86,7 @@ public class Test {
 			dc.printDc();
 			System.out.println();
 			dc.printServers();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
