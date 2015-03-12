@@ -4,19 +4,21 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
 
 	public static void main(String[] args) {
 		TestSort();
 	}
-
+	
 	public static void TestSort()
 	{
 		DataCenter dc = new DataCenter(16, 100);
 		ReadData(dc);
 		ServerDistributer sd = new ServerDistributer();
-		sd.sortServer(dc.getServerList());
+		sd.work(dc.getServerList(), dc.dc);
+		dc.printDc();
 	}
 	
 	public static void ReadData(DataCenter dc) {

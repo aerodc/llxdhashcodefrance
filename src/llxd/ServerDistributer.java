@@ -9,13 +9,17 @@ import java.util.Map;
 
 public class ServerDistributer {
 	
+	final int ROW_COUNT = 16;
+	final int SLOT_COUNT = 100;
+	final int EMPTY = 0;
+	final int OCCUPIED = 1;
 	class IdRatio
 	{
 		public Integer id;
 		public Double ratio;
 	}
 	
-	public void sortServer(List<Server> servers)
+	public void work(List<Server> servers, int[][] dc)
 	{
 		Map<Integer, Server> serverById = new HashMap<Integer, Server>();
 		
@@ -44,15 +48,69 @@ public class ServerDistributer {
 			System.out.print(" ");
 			System.out.println(ir.ratio);
 		}
+		
+		int lastUsedRow = 0;
+		for (IdRatio ir : ratios)
+		{
+			Server s = serverById.get(ir.id);
+			boolean succeed  = putServer(s, dc, lastUsedRow);
+			if (succeed )
+			{
+				lastUsedRow = s.row;
+			}
+		}
+	}
+	
+	public boolean tryOneRow(Server server, int[] currentRow, int rowNumber)
+	{
+		final int targetLength = server.size;
+		
+		for (int i = 0; i < SLOT_COUNT - targetLength; ++i)
+		{
+			boolean ok = true;
+			for(int j = i ; j < i + targetLength; ++j)
+			{
+				if (EMPTY != currentRow[j])
+				{
+					ok = false;
+				}
+			}
+			
+			if (ok)
+			{
+				server.row = rowNumber;
+				server.slot = i;
+				for(int j = i ; j < i + targetLength; ++j)
+				{
+					currentRow[j] = OCCUPIED;
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean putServer(Server server, int[][] dc, int lastUsedRow)
 	{
-		boolean succeed = false;
-		for (int r = lastUsedRow + 1; r < 16; ++r)
+		for (int r = lastUsedRow + 1; r < ROW_COUNT; ++r)
 		{
-			
+			int[] currentRow = dc[r];
+			boolean ok = tryOneRow(server, currentRow, r);
+			if (ok)
+			{
+				return true;
+			}
 		}
-		return succeed;
+		
+		for (int r = 0 ; r < lastUsedRow + 1; ++r)
+		{
+			int[] currentRow = dc[r];
+			boolean ok = tryOneRow(server, currentRow, r);
+			if (ok)
+			{
+				return true;
+			}		
+		}
+		return false;
 	}
 }

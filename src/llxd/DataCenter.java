@@ -25,8 +25,10 @@ public class DataCenter {
 			for (int j=0; j<100; j++) {
 				if (dc[i][j] == 0)
 					System.out.print("_");
-				else
-					System.out.print("x");
+				else if (dc[i][j] == 1)
+					System.out.print("+");
+				else if (dc[i][j] == -1)
+					System.out.print(" ");
 			}
 			System.out.println();
 		}
