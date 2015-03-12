@@ -19,8 +19,9 @@ public class Server {
 		return this.poolId;
 	}
 	
-	public Server(int _size, int _capacity)
+	public Server(int _id, int _size, int _capacity)
 	{
+		this.id = _id;
 		this.size= _size;
 		this.capacity = _capacity;
 	}

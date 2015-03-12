@@ -1,16 +1,23 @@
 package llxd;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DataCenter {
 
-	private Vector<Vector<Integer>> dc;
+	public int[][] dc;
 	
+	private ArrayList<Server> serverList;
+	
+	public ArrayList<Server> getServerList() {
+		return serverList;
+	}
+
+	public void setServerList(ArrayList<Server> serverList) {
+		this.serverList = serverList;
+	}
+
 	public DataCenter(int row, int slot) {
-		dc = new Vector<Vector<Integer>>(row);
-		for (Vector<Integer> v : dc) {
-			v = new Vector<Integer>(slot);
-		}
+		dc = new int[row][slot];
 	}
 
 }
