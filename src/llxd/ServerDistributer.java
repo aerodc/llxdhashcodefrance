@@ -9,10 +9,10 @@ import java.util.Map;
 
 public class ServerDistributer {
 	
-	final int ROW_COUNT = 16;
-	final int SLOT_COUNT = 100;
-	final int EMPTY = 0;
-	final int OCCUPIED = 1;
+	static final int ROW_COUNT = 16;
+	static final int SLOT_COUNT = 100;
+	static final int EMPTY = -2;
+	static final int UNAVAILABLE = -1;
 	class IdRatio
 	{
 		public Integer id;
@@ -82,7 +82,7 @@ public class ServerDistributer {
 				server.slot = i;
 				for(int j = i ; j < i + targetLength; ++j)
 				{
-					currentRow[j] = OCCUPIED;
+					currentRow[j] = server.id;
 				}
 				return true;
 			}

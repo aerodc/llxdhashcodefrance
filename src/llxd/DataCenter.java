@@ -18,17 +18,24 @@ public class DataCenter {
 
 	public DataCenter(int row, int slot) {
 		dc = new int[row][slot];
+		for (int r = 0; r < row; ++r)
+		{
+			for (int s = 0; s < slot; ++s)
+			{
+				dc[r][s] = ServerDistributer.EMPTY;
+			}
+		}
 	}
 
 	public void printDc() {
 		for (int i=0; i < 16; i++) {
 			for (int j=0; j<100; j++) {
-				if (dc[i][j] == 0)
+				if (dc[i][j] == ServerDistributer.EMPTY)
 					System.out.print("_");
-				else if (dc[i][j] == 1)
-					System.out.print("+");
-				else if (dc[i][j] == -1)
+				else if (dc[i][j] == ServerDistributer.UNAVAILABLE)
 					System.out.print(" ");
+				else 
+					System.out.print("+");
 			}
 			System.out.println();
 		}

@@ -45,7 +45,7 @@ public class Test {
 				x = Integer.parseInt(strs[0]);
 				y = Integer.parseInt(strs[1]);
 				if (i >= 1 && i <= 80) {
-					dc.dc[x][y] = -1;
+					dc.dc[x][y] = ServerDistributer.UNAVAILABLE;
 				} else {
 					Server s = new Server(i - 80, x, y);
 					list.add(s);
