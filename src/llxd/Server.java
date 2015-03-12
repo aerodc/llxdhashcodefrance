@@ -10,6 +10,13 @@ public class Server {
 	
 	private int poolId;
 	
+	public Server()
+	{
+		this.row = -1;
+		this.slot = -1;
+		this.poolId = -1;
+	}
+	
 	public void SetPoolId(int _poolId)
 	{
 		this.poolId = _poolId;
