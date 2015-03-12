@@ -8,10 +8,17 @@ import java.util.ArrayList;
 public class Test {
 
 	public static void main(String[] args) {
-		DataCenter dc = new DataCenter(16, 100);
-		ReadData(dc);
+		TestSort();
 	}
 
+	public static void TestSort()
+	{
+		DataCenter dc = new DataCenter(16, 100);
+		ReadData(dc);
+		ServerDistributer sd = new ServerDistributer();
+		sd.sortServer(dc.getServerList());
+	}
+	
 	public static void ReadData(DataCenter dc) {
 		BufferedReader br = null;
 
