@@ -41,6 +41,15 @@ public class DataCenter {
 		}
 	}
 	
+	public void printDc2() {
+		for (int i=0; i < 16; i++) {
+			for (int j=0; j<100; j++) {
+				System.out.print(dc[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
 	public void printServers() {
 		for (Server s : this.serverList) {
 			System.out.print(s.capacity + " ");
