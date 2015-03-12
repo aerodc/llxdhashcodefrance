@@ -44,7 +44,10 @@ public class Test {
 				i++;
 			}
 			dc.setServerList(list);
-
+			dc.printDc();
+			System.out.println();
+			dc.printServers();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
