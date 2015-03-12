@@ -19,6 +19,8 @@ public class Test {
 		ServerDistributer sd = new ServerDistributer();
 		sd.work(dc.getServerList(), dc.dc);
 		dc.printDc();
+		FullRandom fr = new FullRandom(dc);
+		fr.RunRandom();
 	}
 	
 	public static void ReadData(DataCenter dc) {
