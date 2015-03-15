@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import llxd.ServerDistributer.IdRatio;
-
 public class PoolDistributer1 {
 
 	class Point {

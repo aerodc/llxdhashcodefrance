@@ -13,17 +13,13 @@ public class ServerDistributer {
 	static final int SLOT_COUNT = 100;
 	static final int EMPTY = -2;
 	static final int UNAVAILABLE = -1;
-	class IdRatio
-	{
-		public Integer id;
-		public Double ratio;
-	}
+	
+	public List<IdRatio> ratios = new ArrayList<IdRatio>();
 	
 	public void work(List<Server> servers, int[][] dc)
 	{
 		Map<Integer, Server> serverById = new HashMap<Integer, Server>();
 		
-		List<IdRatio> ratios = new ArrayList<IdRatio>();
 		for (Server s : servers)
 		{
 			serverById.put(s.id, s);

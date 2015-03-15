@@ -50,6 +50,21 @@ public class DataCenter {
 		}
 	}
 	
+	public void printDc3() {
+		for (int i=0; i < 16; i++) {
+			for (int j=0; j<100; j++) {
+				if (dc[i][j] == ServerDistributer.EMPTY ) {
+					System.out.format("%3c ", 'E');
+				} else if ( dc[i][j] == ServerDistributer.UNAVAILABLE) {
+					System.out.format("%3c ", 'U');
+				} else {
+					System.out.format("%3d ", serverList.get(dc[i][j]-1).GetPoolId());
+				}
+			}
+			System.out.println();
+		}
+	}
+	
 	public void printServers() {
 		for (Server s : this.serverList) {
 			System.out.print(s.capacity + " ");

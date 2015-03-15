@@ -1,15 +1,37 @@
 package llxd;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Test {
 
 	public static void main(String[] args) {
 		TestSort();
+	}
+	
+	public static void printOut(ArrayList<Server> servers) {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("dc.out", "UTF-8");
+			for (int i = 0; i < servers.size(); i++) {
+				Server s = servers.get(i);
+				if (s.row == -1 || s.slot == -1 || s.GetPoolId() == -1) {
+					writer.println("x");
+				} else {
+					writer.println(s.row + " " + s.slot + " " + s.GetPoolId());
+				}
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void TestSort() {
@@ -17,38 +39,44 @@ public class Test {
 		ReadData(dc);
 		ServerDistributer sd = new ServerDistributer();
 		sd.work(dc.getServerList(), dc.dc);
-		// dc.printDc();
-		// FullRandom fr = new FullRandom(dc);
-		// fr.RunRandom();
 
-		PoolDistributer1 pd1 = new PoolDistributer1();
-		pd1.work(dc);
-		System.out.println("Run here");
-
-		for (int i = 0; i < dc.getServerList().size(); i++) {
-
-//			Random r = new Random();
-
-			int low = 0;
-
-			int high = 45;
-
-//			int pullId = r.nextInt(high - low) + low;
-
-			Server s = dc.getServerList().get(i);
-
-//			s.SetPoolId(pullId);
-
-			if (s.row == -1 || s.slot == -1 || s.GetPoolId() == -1) {
-
-				System.out.println("x");
-
+		int averagePoolCapacity = 455;
+		int sum =0;
+		int m=0,n=624;
+		int poolNumber=0;
+		boolean front = true;
+		while (m!=n) {
+			int index=-1;
+			if (front) {
+				index = m;
+				m++;
 			} else {
-				System.out.println(s.row + " " + s.slot + " " + s.GetPoolId());
-
+				index = n;
+				n--;
 			}
-
+			int sId = sd.ratios.get(index).id;
+			Server s = dc.getServerList().get(sId-1);
+			if (s.row != -1) {
+				if (front) {
+					front = false;
+				} else {
+					front = true;
+				}
+				s.SetPoolId(poolNumber);
+				sum+= s.capacity;
+				if (sum > averagePoolCapacity) {
+					System.out.println("PoolId: " + poolNumber + " sum : " + sum);
+					if (poolNumber < 44) {
+						sum = 0;
+						poolNumber++;
+					}
+				}
+			}
 		}
+		
+		dc.printDc3();
+		
+		printOut(dc.getServerList());
 	}
 
 	public static void ReadData(DataCenter dc) {
