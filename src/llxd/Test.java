@@ -40,6 +40,7 @@ public class Test {
 		ServerDistributer sd = new ServerDistributer();
 		sd.work(dc.getServerList(), dc.dc);
 
+		int[] poolSums = new int[45];
 		int averagePoolCapacity = 455;
 		int sum =0;
 		int m=0,n=624;
@@ -66,6 +67,7 @@ public class Test {
 				sum+= s.capacity;
 				if (sum > averagePoolCapacity) {
 					System.out.println("PoolId: " + poolNumber + " sum : " + sum);
+					poolSums[poolNumber] = sum;
 					if (poolNumber < 44) {
 						sum = 0;
 						poolNumber++;
@@ -77,6 +79,46 @@ public class Test {
 		dc.printDc3();
 		
 		printOut(dc.getServerList());
+		
+		// try to calculate score
+		Server[][] dcServers = new Server[16][101];
+		int[] serverNumbers = new int[16];
+		for (int serverId = 0; serverId < 625; serverId++)
+		{
+			Server s = dc.getServerList().get(serverId);
+			if (s.row != -1)
+			{
+				dcServers[s.row][serverNumbers[s.row]]=s;
+				serverNumbers[s.row]++;				
+			}
+		}
+		
+		int score = 10000000;
+		for (int r=0; r < 16; r++)
+		{
+			int[] sums = new int[45];
+			for (int i=0; i<45;i++) sums[i] = poolSums[i];
+			int len = serverNumbers[r];
+			for (int i=0;i<len;i++)
+			{
+				Server s = dcServers[r][i];
+				if (s.GetPoolId() != -1)
+					sums[s.GetPoolId()]-= s.capacity;
+			}
+			int poolScore = 100000000;
+			for (int i=0; i<45;i++)
+			{
+				if (sums[i] < poolScore)
+				{
+					poolScore = sums[i];
+				}
+			}
+			if (poolScore < score)
+			{
+				score = poolScore;
+			}
+		}
+		System.out.println("Final score is " + score);
 	}
 
 	public static void ReadData(DataCenter dc) {
