@@ -51,6 +51,10 @@ public class DataCenter {
 	}
 	
 	public void printDc3() {
+		for (int j = 0; j< 100; j++) System.out.format("%3d ", j);
+		System.out.println();
+		for (int j=0; j<400; j++) System.out.print('-');
+		System.out.println();
 		for (int i=0; i < 16; i++) {
 			for (int j=0; j<100; j++) {
 				if (dc[i][j] == ServerDistributer.EMPTY ) {

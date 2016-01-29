@@ -14,6 +14,11 @@ public class Test {
 		TestSort();
 	}
 	
+	public static final int ROW = 16;
+	public static final int SLOT = 100;
+	public static final int POOLNUMBER = 45;
+	public static final int SERVERNUMBER = 625;
+	
 	public static void printOut(ArrayList<Server> servers) {
 		PrintWriter writer;
 		try {
@@ -35,17 +40,25 @@ public class Test {
 	}
 
 	public static void TestSort() {
+		// Start from here
+		// step 1 read from file
 		DataCenter dc = new DataCenter(16, 100);
 		ReadData(dc);
+		
+		// step 2 put server in slots by orders of idRatio... 具体忘了
 		ServerDistributer sd = new ServerDistributer();
 		sd.work(dc.getServerList(), dc.dc);
 
-		int[] poolSums = new int[45];
+		// step 3 attribute pool Id for servers
+		// 轮流从dc首尾选取server，如果当前pool的sum超过平均值则进行下一个pool
+		int[] poolSums = new int[POOLNUMBER];
 		int averagePoolCapacity = 455;
 		int sum =0;
-		int m=0,n=624;
+		int m=0,n=SERVERNUMBER-1;
 		int poolNumber=0;
 		boolean front = true;
+		boolean allPoolsReachedAverage = false;
+		boolean firstComplement = true;
 		while (m!=n) {
 			int index=-1;
 			if (front) {
@@ -63,27 +76,52 @@ public class Test {
 				} else {
 					front = true;
 				}
-				s.SetPoolId(poolNumber);
-				sum+= s.capacity;
-				if (sum > averagePoolCapacity) {
-					System.out.println("PoolId: " + poolNumber + " sum : " + sum);
-					poolSums[poolNumber] = sum;
-					if (poolNumber < 44) {
-						sum = 0;
-						poolNumber++;
+				if (allPoolsReachedAverage)
+				{
+					// attribute extra server to pool 33 and 39
+					if (firstComplement)
+					{
+						s.SetPoolId(39);
+						poolSums[39] += s.capacity;
+						System.out.println("PoolId: " + 39 + " sum : " + poolSums[39]);
+						firstComplement = false;
 					}
+					else
+					{
+						s.SetPoolId(33);
+						poolSums[33] += s.capacity;
+						System.out.println("PoolId: " + 33 + " sum : " + poolSums[33]);
+					}
+				}
+				else
+				{
+					s.SetPoolId(poolNumber);
+					sum+= s.capacity;
+					if (sum > averagePoolCapacity) {
+						System.out.println("PoolId: " + poolNumber + " sum : " + sum);
+						poolSums[poolNumber] = sum;
+						if (poolNumber < POOLNUMBER-1) {
+							sum = 0;
+							poolNumber++;
+						}
+						else
+						{
+							allPoolsReachedAverage = true;
+						}
+					}	
 				}
 			}
 		}
 		
 		dc.printDc3();
 		
+		// step 4 write output into dc.out
 		printOut(dc.getServerList());
 		
 		// try to calculate score
-		Server[][] dcServers = new Server[16][101];
-		int[] serverNumbers = new int[16];
-		for (int serverId = 0; serverId < 625; serverId++)
+		Server[][] dcServers = new Server[ROW][SLOT+1];
+		int[] serverNumbers = new int[ROW];
+		for (int serverId = 0; serverId < SERVERNUMBER; serverId++)
 		{
 			Server s = dc.getServerList().get(serverId);
 			if (s.row != -1)
@@ -93,11 +131,13 @@ public class Test {
 			}
 		}
 		
-		int score = 10000000;
-		for (int r=0; r < 16; r++)
+		int score = Integer.MAX_VALUE;
+		int smallestRow = -1;
+		for (int r=0; r < ROW; r++)
 		{
-			int[] sums = new int[45];
-			for (int i=0; i<45;i++) sums[i] = poolSums[i];
+			System.out.print("When pool " + r + " is down");
+			int[] sums = new int[POOLNUMBER];
+			for (int i=0; i<POOLNUMBER;i++) sums[i] = poolSums[i];
 			int len = serverNumbers[r];
 			for (int i=0;i<len;i++)
 			{
@@ -105,20 +145,25 @@ public class Test {
 				if (s.GetPoolId() != -1)
 					sums[s.GetPoolId()]-= s.capacity;
 			}
-			int poolScore = 100000000;
-			for (int i=0; i<45;i++)
+			int poolScore = Integer.MAX_VALUE;
+			int smallestPool = -1;
+			for (int i=0; i<POOLNUMBER;i++)
 			{
 				if (sums[i] < poolScore)
 				{
 					poolScore = sums[i];
+					smallestPool = i;
 				}
 			}
+			System.out.println(" Smallest pool is " + smallestPool);
 			if (poolScore < score)
 			{
 				score = poolScore;
+				smallestRow = r;
 			}
 		}
 		System.out.println("Final score is " + score);
+		System.out.println("Smallest row is " + smallestRow);
 	}
 
 	public static void ReadData(DataCenter dc) {
